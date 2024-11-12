@@ -1,23 +1,20 @@
 class Map:
     def __init__(self):
         self.locations = {
-            "start": "Vous êtes au départ, dans une clairière calme.",
-            "forest1": "Vous entrez dans une forêt dense.",
-            "forest2": "Des arbres sombres et imposants vous entourent.",
-            "boss": "Vous êtes face au Boss, prêt pour le combat final."
+            "start": "Vous êtes au point de départ.",
+            "dungeon_level_1": "Vous êtes dans le premier niveau du donjon.",
+            "dungeon_level_2": "Un couloir sombre avec des bruits étranges.",
+            "dungeon_level_3": "Vous sentez une forte présence magique ici.",
+            "boss": "Le Boss est ici, une aura puissante émane."
         }
-        self.current_location = "start"
+        self.player_position = "start"
 
     def move(self, direction):
-        if direction == "go north":
-            self.current_location = "forest1"
-        elif direction == "go east":
-            self.current_location = "forest2"
-        elif direction == "go west":
-            self.current_location = "start"
-        elif direction == "go south" and self.current_location == "forest2":
-            self.current_location = "boss"
-        return self.current_location
+        # Gère les niveaux de donjon en fonction des directions
+        if direction in ["north", "south", "east", "west"]:
+            # Ajout de logique pour changer les niveaux du donjon
+            self.player_position = "dungeon_level_1"  # Exemple simple
+        return self.player_position
 
     def describe_location(self, location):
-        print(self.locations.get(location, "Endroit inconnu."))
+        print(self.locations.get(location, "Rien de spécial ici."))

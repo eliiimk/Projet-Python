@@ -2,6 +2,7 @@ from character import Character
 from map import Map
 from utils import save_game, load_game
 from combat import encounter
+from store import Store
 import random
 
 def main_menu():
@@ -12,34 +13,55 @@ def main_menu():
     print("4. Quitter")
     return input("Choisissez une option : ")
 
+def choose_class():
+    print("Choisissez une classe :")
+    print("1. Guerrier - Plus de HP, meilleure défense")
+    print("2. Mage - Attaque magique élevée, moins de HP")
+    print("3. Voleur - Attaque équilibrée, esquive")
+    choice = input("Classe : ")
+    if choice == "1":
+        return "Guerrier"
+    elif choice == "2":
+        return "Mage"
+    elif choice == "3":
+        return "Voleur"
+    else:
+        print("Choix invalide, Guerrier choisi par défaut.")
+        return "Guerrier"
+
 def start_game():
     player_name = input("Entrez votre nom : ")
-    player = Character(name=player_name)
+    player_class = choose_class()
+    player = Character(name=player_name, character_class=player_class)
     game_map = Map()
-    print("Bienvenue dans l'aventure, {} !".format(player_name))
+    print(f"Bienvenue dans l'aventure, {player_name} le {player_class}!")
     game_loop(player, game_map)
 
 def game_loop(player, game_map):
+    store = Store()  # Ajouter un magasin
     while player.current_hp > 0:
         print("\nDirection actuelle :")
-        print("Commandes : Go North, Go South, Go East, Go West, Menu")
+        print("Commandes : Go North, Go South, Go East, Go West, Store, Menu")
 
         command = input("Votre commande : ").lower()
+
         if command == "menu":
             save_game(player)
             break
+        elif command == "store":
+            store.visit(player)
         elif command in ["go north", "go south", "go east", "go west"]:
             location = game_map.move(command)
             game_map.describe_location(location)
-            
-            # Aléatoirement rencontrer un monstre ou trouver un objet
+
+            # Aléatoire : rencontre ou objet (sauf pour start et boss)
             if random.random() < 0.5 and location not in ["start", "boss"]:
                 if random.random() < 0.5:
                     encounter(player)
                 else:
                     print("Vous trouvez un objet !")
                     player.find_item()
-                    
+
             if location == "boss":
                 print("Le Boss vous attend...")
                 if encounter(player, boss=True):
@@ -59,7 +81,7 @@ if __name__ == "__main__":
                 game_map = Map()
                 game_loop(player, game_map)
         elif choice == "3":
-            print("\nRPG en console écrit en Python par Eli & Michel.")
+            print("\nRPG en console écrit en Python.")
         elif choice == "4":
             print("Merci d'avoir joué !")
             break
