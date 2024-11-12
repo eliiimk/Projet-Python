@@ -38,7 +38,7 @@ def start_game():
     game_loop(player, game_map)
 
 def game_loop(player, game_map):
-    store = Store()  # Ajouter un magasin
+    store = Store()
     while player.current_hp > 0:
         print("\nDirection actuelle :")
         print("Commandes : Go North, Go South, Go East, Go West, Store, Menu")
@@ -54,8 +54,8 @@ def game_loop(player, game_map):
             location = game_map.move(command)
             game_map.describe_location(location)
 
-            # Aléatoire : rencontre ou objet (sauf pour start et boss)
-            if random.random() < 0.5 and location not in ["start", "boss"]:
+            # Aucun combat ou objet sur le lieu de départ ou celui du boss
+            if location not in ["start", "boss"]:
                 if random.random() < 0.5:
                     encounter(player)
                 else:
@@ -69,6 +69,9 @@ def game_loop(player, game_map):
                     break
         else:
             print("Commande inconnue.")
+
+    if player.current_hp <= 0:
+        print("Vous avez été vaincu. Retour au menu principal.")
 
 if __name__ == "__main__":
     while True:
