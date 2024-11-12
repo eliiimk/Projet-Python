@@ -59,7 +59,7 @@ if __name__ == "__main__":
                 game_map = Map()
                 game_loop(player, game_map)
         elif choice == "3":
-            print("\nRPG en console écrit en Python.")
+            print("\nRPG en console écrit en Python par Eli & Michel.")
         elif choice == "4":
             print("Merci d'avoir joué !")
             break
