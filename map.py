@@ -14,7 +14,7 @@ class Map:
     def move(self, direction):
         # Déplacements prédéfinis entre les emplacements
         moves = {
-            "start": {"north": "forest"},
+            "start": {"north": "forest"},            # Autorise le déplacement vers la forêt
             "forest": {"south": "start", "east": "cave"},
             "cave": {"west": "forest", "north": "lake"},
             "lake": {"south": "cave", "east": "mountain"},
