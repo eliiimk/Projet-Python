@@ -1,32 +1,23 @@
 class Map:
     def __init__(self):
-        # Carte fixe, aucun changement aléatoire
         self.locations = {
-            "start": "Vous êtes au point de départ.",
-            "forest": "Une forêt dense avec des bruits inquiétants.",
-            "cave": "Une grotte sombre et humide.",
-            "lake": "Un lac calme avec des eaux claires.",
-            "mountain": "Une montagne abrupte avec une vue dégagée.",
-            "boss": "Le Boss se tient ici, prêt à vous affronter."
+            "start": "Vous êtes au départ, dans une clairière calme.",
+            "forest1": "Vous entrez dans une forêt dense.",
+            "forest2": "Des arbres sombres et imposants vous entourent.",
+            "boss": "Vous êtes face au Boss, prêt pour le combat final."
         }
-        self.player_position = "start"
-    
+        self.current_location = "start"
+
     def move(self, direction):
-        # Déplacements prédéfinis entre les emplacements
-        moves = {
-            "start": {"north": "forest"},            # Autorise le déplacement vers la forêt
-            "forest": {"south": "start", "east": "cave"},
-            "cave": {"west": "forest", "north": "lake"},
-            "lake": {"south": "cave", "east": "mountain"},
-            "mountain": {"west": "lake", "north": "boss"},
-            "boss": {}  # Aucun déplacement possible à partir du boss
-        }
-        if direction in moves[self.player_position]:
-            self.player_position = moves[self.player_position][direction]
-            print(f"Vous allez {direction}.")
-        else:
-            print("Vous ne pouvez pas aller dans cette direction.")
-        return self.player_position
+        if direction == "go north":
+            self.current_location = "forest1"
+        elif direction == "go east":
+            self.current_location = "forest2"
+        elif direction == "go west":
+            self.current_location = "start"
+        elif direction == "go south" and self.current_location == "forest2":
+            self.current_location = "boss"
+        return self.current_location
 
     def describe_location(self, location):
-        print(self.locations.get(location, "Rien de spécial ici."))
+        print(self.locations.get(location, "Endroit inconnu."))

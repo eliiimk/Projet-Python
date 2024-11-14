@@ -1,11 +1,12 @@
-from character import Character
-from map import Map
-from utils import save_game, load_game
-from combat import encounter
-from store import Store
-import random
+from character import Character    # Importation de la classe pour créer un joueur
+from map import Map                # Importation de la classe pour gérer la carte
+from utils import save_game, load_game  # Importation des fonctions de sauvegarde et de chargement
+from combat import encounter  
+from store import Store       # Importation de la fonction de combat
+import random                       # Pour les choix aléatoires
 
 def main_menu():
+    # Affiche le menu principal et renvoie le choix du joueur
     print("\nMAIN MENU:")
     print("1. Créer une nouvelle partie")
     print("2. Charger une partie sauvegardée")
@@ -30,41 +31,41 @@ def choose_class():
         return "Guerrier"
 
 def start_game():
+    # Démarre une nouvelle partie
     player_name = input("Entrez votre nom : ")
     player_class = choose_class()
-    player = Character(name=player_name, character_class=player_class)
-    game_map = Map()
+    player = Character(name=player_name, character_class=player_class) # Crée un personnage
+    game_map = Map()                      # Crée une carte
     print(f"Bienvenue dans l'aventure, {player_name} le {player_class}!")
-    game_loop(player, game_map)
+    game_loop(player, game_map)           # Appelle la boucle de jeu principale
 
 def game_loop(player, game_map):
     store = Store()
-    while player.current_hp > 0:
+    # Boucle de jeu principale où le joueur entre des commandes
+    while player.current_hp > 0:  # Tant que le joueur a de la vie
         print("\nDirection actuelle :")
-        print("Commandes : Go North, Go South, Go East, Go West, Store, Menu")
-
-        command = input("Votre commande : ").lower()
+        print("Commandes : Go North, Go South, Go East, Go West, store, Menu")
+        command = input("Votre commande : ").lower()  # Récupère la commande
 
         if command == "menu":
-            save_game(player)
+            save_game(player)  # Sauvegarde et quitte si "menu" est entré
             break
         elif command == "store":
             store.visit(player)
         elif command in ["go north", "go south", "go east", "go west"]:
             location = game_map.move(command)
             game_map.describe_location(location)
-
-            # Aucun combat ou objet sur le lieu de départ ou celui du boss
-            if location not in ["start", "boss"]:
+            
+            # Rencontre aléatoire sauf au départ ou au boss
+            if random.random() < 0.5 and location not in ["start", "boss"]:
                 if random.random() < 0.5:
-                    encounter(player)
+                    encounter(player)                 # Déclenche un combat
                 else:
                     print("Vous trouvez un objet !")
-                    player.find_item()
-
+                    player.find_item()                # Le joueur trouve un objet
             if location == "boss":
                 print("Le Boss vous attend...")
-                if encounter(player, boss=True):
+                if encounter(player, boss=True):      # Combat final avec le boss
                     print("Félicitations ! Vous avez vaincu le Boss !")
                     break
         else:
@@ -73,18 +74,19 @@ def game_loop(player, game_map):
     if player.current_hp <= 0:
         print("Vous avez été vaincu. Retour au menu principal.")
 
+
 if __name__ == "__main__":
     while True:
-        choice = main_menu()
+        choice = main_menu()  # Affiche le menu principal
         if choice == "1":
-            start_game()
+            start_game()      # Nouvelle partie
         elif choice == "2":
-            player = load_game()
+            player = load_game()     # Charge une partie
             if player:
                 game_map = Map()
                 game_loop(player, game_map)
         elif choice == "3":
-            print("\nRPG en console écrit en Python.")
+            print("\nRPG en console écrit en Python par Eli & Michel.")
         elif choice == "4":
             print("Merci d'avoir joué !")
             break

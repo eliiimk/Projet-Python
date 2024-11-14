@@ -1,5 +1,4 @@
 import random
-from locations import map
 from combat import combat
 
 def start_game():
